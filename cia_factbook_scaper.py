@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import pandas as pd
 import pickle
 
 from bs4 import BeautifulSoup
@@ -82,3 +83,4 @@ if __name__ == "__main__":
         pickle.dump(countries, open(pickle_name, "wb"))
     countries = parse_pages(countries)
     json.dump(countries, open("countries.json", "wt"), indent=0)
+    pd.DataFrame.from_dict(countries, orient="index").to_csv("countries.csv", index_label="Country")
