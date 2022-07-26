@@ -66,6 +66,8 @@ def parse_pages(countries):
                 next_tag = h3.next_sibling
                 if next_tag.text != "":
                     country[column_name] = next_tag.text
+                elif next_tag.next_sibling is None:
+                    logging.warning("I could not find a paragraph for section \"{}\" on \"{}\".".format(section_name, country["url"]))
                 else:
                     country[column_name] = next_tag.next_sibling.text
     return countries
