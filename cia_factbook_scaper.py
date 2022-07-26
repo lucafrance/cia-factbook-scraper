@@ -44,7 +44,7 @@ def scrape_pages(countries):
             driver.get(url)
             country["page_source"] = driver.page_source
         except Exception as e:
-            logging.warning("Could not scrape the source from {}.\n{}".format("url", 2))
+            logging.warning("Could not scrape the source from {}.\n{}".format(url, e))
     driver.quit()
 
 
