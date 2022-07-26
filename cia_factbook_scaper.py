@@ -25,7 +25,7 @@ def countries_with_urls():
     lines_list = [txt.split("\"}", 1)[0] for txt in lines_list]
     countries = {}
     for line in lines_list:
-        country_name = line.removeprefix("{\"name\":").split("\",", 1)[0]
+        country_name = line.removeprefix("{\"name\":\"").split("\",", 1)[0]
         if line.find("\"path\":\"") == -1:
             continue
         url = line.split("\"path\":\"", 1)[1]
@@ -46,6 +46,7 @@ def scrape_pages(countries):
         except Exception as e:
             logging.warning("Could not scrape the source from {}.\n{}".format(url, e))
     driver.quit()
+    return countries
 
 
 def parse_pages(countries):
@@ -67,14 +68,15 @@ def parse_pages(countries):
                     country[column_name] = next_tag.text
                 else:
                     country[column_name] = next_tag.next_sibling.text
+    return countries
 
 
 if __name__ == "__main__":
     pickle_name = "countries_with_page_source.pickle" 
-    if not os.path.exists(pickle_name):
-        countries_with_page_source = countries_with_urls()
-        countries_with_page_source = scrape_pages(countries_with_page_source)
-        pickle.dump(countries_with_page_source, open(pickle_name, "wb"))
-    countries = pickle.load(open(pickle_name, "rb"))
-    parse_pages(countries)
+    if os.path.exists(pickle_name):
+        countries = pickle.load(open(pickle_name, "rb"))
+    else:
+        countries = scrape_pages(countries_with_urls())
+        pickle.dump(countries, open(pickle_name, "wb"))
+    countries = parse_pages(countries)
     json.dump(countries, open("countries.json", "wt"), indent=0)
