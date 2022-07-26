@@ -37,11 +37,10 @@ def parse_pages(countries):
         soup = BeautifulSoup(page_source, "html.parser")
         content = soup.find("div", class_="content-area-content")
         for section in content.children:
-            try: 
-                section_name = section.find("h2").text
-            except Exception as e:
-                logging.warning("Found no h2 tag in at least one section.\n{}\n{}".format(e, section))
+            h2_tag = section.find("h2")
+            if h2_tag is None:
                 continue
+            section_name = h2_tag.text
             for h3 in section.find_all("h3"):
                 column_name = ": ".join([section_name, h3.text])
                 next_tag = h3.next_sibling
