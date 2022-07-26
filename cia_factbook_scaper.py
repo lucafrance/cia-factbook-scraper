@@ -44,7 +44,11 @@ def parse_pages(countries):
                 continue
             for h3 in section.find_all("h3"):
                 column_name = ": ".join([section_name, h3.text])
-                country[column_name] = h3.next_sibling.text
+                next_tag = h3.next_sibling
+                if next_tag.text != "":
+                    country[column_name] = next_tag.text
+                else:
+                    country[column_name] = next_tag.next_sibling.text
 
 
 
