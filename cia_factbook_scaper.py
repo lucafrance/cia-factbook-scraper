@@ -155,6 +155,17 @@ def export_countries_urls(countries):
     open("countries_urls.md", "wt").write("\n".join(lines))
 
 
+def export_list_of_columns(countries):
+    """Export a list of all columns as markdown."""
+    columns = []
+    for country in countries.values():
+        columns = columns + list(country.keys())
+    columns = list(dict.fromkeys(columns))
+    columns.sort()
+    columns = ["- " + c for c in columns]
+    open("columns.md", "wt").write("\n".join(columns))
+
+
 if __name__ == "__main__":
     pickle_name = "countries_with_page_source.pickle" 
     if os.path.exists(pickle_name):
@@ -164,5 +175,6 @@ if __name__ == "__main__":
         pickle.dump(countries, open(pickle_name, "wb"))
     countries = parse_pages(countries)
     export_countries_urls(countries)
+    export_list_of_columns(countries)
     json.dump(countries, open("countries.json", "wt"), indent=0)
     pd.DataFrame.from_dict(countries, orient="index").to_csv("countries.csv", index_label="Country")
