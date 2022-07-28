@@ -1,20 +1,30 @@
-`country_data_codes.csv` downloaded from [here](https://www.cia.gov/the-world-factbook/references/country-data-codes/).
+# CIA - The World Factbook Scraper
+This is a scraper for [*The World Factbook*](https://www.cia.gov/the-world-factbook/).
+The data is exported to a `json` and to a `csv`.
 
-### Possible improvements
-Export list of columns.
+The exported data is in the public domain.
+> The Factbook is in the public domain. Accordingly, it may be copied freely without permission of the Central Intelligence Agency (CIA). The official seal of the CIA, however, may NOT be copied without permission as required by the CIA Act of 1949 (50 U.S.C. section 403m). Misuse of the official seal of the CIA could result in civil and criminal penalties.
+*[About The World Factbook - Copyright and Contributors](https://www.cia.gov/the-world-factbook/about/copyright-and-contributors/)*
 
-Scrape the countries' photos.
+The file `country_data_codes.csv` is used as the list of countries to scrape.
+It is in the publc domain, as it also provided by the CIA ([source](https://www.cia.gov/the-world-factbook/references/country-data-codes/)).
 
-Scrape audio samples.
+## Requirements
+- [Python](https://www.python.org/)
+- [Selenium](https://www.selenium.dev/)
+- [Beautiful Soup 4](https://www.crummy.com/software/BeautifulSoup/)
 
-Scrape the CIA world factbook from previous years.
-
-Remove text from numerical values and add text to column name.
-- Now: `column name = "Coastline"`, `value = "7,600 km"`
-- After: `column name = "Coastline (sq km)"`, `value = 7600`
-
-Refractor code that handles `strong` tags.
-
-Rename `next_tag` variable to something more meaningful.
-
-Scrape when the page was last updated.
+## Possible improvements
+- Export list of columns.
+- Remove text from numerical values and add text to column name.
+    - Now: `column name = "Coastline"`, `value = "7,600 km"`
+    - After: `column name = "Coastline (sq km)"`, `value = 7600`
+- Refractor code that handles `strong` tags.
+- Rename `next_tag` variable to something more meaningful.
+- Scrape additional content:
+    - when the page was last updated,
+    - photos,
+    - audio samples,
+    - [oceans](https://www.cia.gov/the-world-factbook/oceans/atlantic-ocean/),
+    - [references](https://www.cia.gov/the-world-factbook/references/),
+    - the CIA world factbook from previous years.
