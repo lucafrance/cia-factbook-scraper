@@ -3,4 +3,5 @@
 *.log
 *.pickle
 *.xlsx
+countries_urls.md
 countries.csv

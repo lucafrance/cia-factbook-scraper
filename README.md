@@ -16,7 +16,6 @@ It is in the publc domain, as it also provided by the CIA ([source](https://www.
 
 ## Possible improvements
 - Export list of columns.
-- Export list of countries with link to source as markdown.
 - Remove text from numerical values and add text to column name.
     - Now: `column name = "Coastline"`, `value = "7,600 km"`
     - After: `column name = "Coastline (sq km)"`, `value = 7600`

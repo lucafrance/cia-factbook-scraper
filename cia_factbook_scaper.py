@@ -148,6 +148,13 @@ def parse_pages(countries):
     return countries
 
 
+def export_countries_urls(countries):
+    """Export the countries with link to the source as markdown."""
+    lines = ["- [{}]({})".format(country_name, country["url"])
+             for country_name, country in countries.items()]
+    open("countries_urls.md", "wt").write("\n".join(lines))
+
+
 if __name__ == "__main__":
     pickle_name = "countries_with_page_source.pickle" 
     if os.path.exists(pickle_name):
@@ -156,5 +163,6 @@ if __name__ == "__main__":
         countries = scrape_pages(countries_with_urls())
         pickle.dump(countries, open(pickle_name, "wb"))
     countries = parse_pages(countries)
+    export_countries_urls(countries)
     json.dump(countries, open("countries.json", "wt"), indent=0)
     pd.DataFrame.from_dict(countries, orient="index").to_csv("countries.csv", index_label="Country")
