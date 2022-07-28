@@ -67,6 +67,18 @@ def parse_pages(countries):
                 column_name = ": ".join([section_name, h3.text])
                 next_tag = h3.next_sibling
 
+                # Check that the information is actually there
+                next_tag_found = True
+                if next_tag is None:
+                    next_tag_found = False
+                elif next_tag.text.strip() == "":
+                    next_tag_found = False
+                    
+                if not next_tag_found:
+                    logging.warning("Information not found for section \"{}\" in \"{}\".".format(h3.text, country["url"]))
+                    print("WARNING You might want to check section \"{}\" at \"{}\", I did not find anything.".format(h3.text, country["url"]))
+                    continue
+
                 # If `next_tag` is a bs4 Tag, then it could contain `strong`` tags.
                 # If not, it is ptobably a bs4 NavigableString and the list of `strong` tags is empty.
                 if type(next_tag) is bs4.element.Tag:
