@@ -55,7 +55,7 @@ def scrape_pages(countries):
 
 def stripped_tag_text(tag):
     """Given a bs4 tag, return the text stripper of irrelevant characters."""
-    return tag.text.rstrip(":- \u00a0\u2014")
+    return tag.text.strip(":- \u00a0\u2014")
 
 
 def parse_pages(countries):
@@ -116,7 +116,7 @@ def parse_pages(countries):
                         # I feel like there is a smarter way to do this.
                         next_non_empty_strong_tag = None
                         for j in range(i+1, len(strong_tags)):
-                            if strong_tags[j].text.strip() != "":
+                            if stripped_tag_text(strong_tags[j]) != "":
                                 next_non_empty_strong_tag = strong_tags[j]
                                 break
                         if next_non_empty_strong_tag is None:
