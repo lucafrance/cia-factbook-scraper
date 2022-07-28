@@ -16,3 +16,5 @@ Remove text from numerical values and add text to column name.
 Refractor code that handles `strong` tags.
 
 Rename `next_tag` variable to something more meaningful.
+
+Scrape when the page was last updated.
