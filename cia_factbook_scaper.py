@@ -53,6 +53,11 @@ def scrape_pages(countries):
     return countries
 
 
+def stripped_tag_text(tag):
+    """Given a bs4 tag, return the text stripper of irrelevant characters."""
+    return tag.text.rstrip(":- \u00a0\u2014")
+
+
 def parse_pages(countries):
     """Parse the page source for each country, then delete the page source"""
 
@@ -66,7 +71,7 @@ def parse_pages(countries):
                 continue
             section_name = h2_tag.text
             for h3 in section.find_all("h3"):
-                column_name = ": ".join([section_name, h3.text])
+                column_name = ": ".join([section_name, stripped_tag_text(h3)])
                 next_tag = h3.next_sibling
 
                 # Check that the information is actually there
@@ -102,7 +107,7 @@ def parse_pages(countries):
                         
                         if strong_tags[i].text == "":
                             continue
-                        column_name2 = " - ".join([column_name, strong_tags[i].text.rstrip(":")])
+                        column_name2 = " - ".join([column_name, stripped_tag_text(strong_tags[i])])
                         txt = next_tag.text
                         txt = txt.split(strong_tags[i].text, 1)[1]
                         # This is to handle a stupid case of `<strong><br></strong>` in the source.
@@ -124,7 +129,7 @@ def parse_pages(countries):
                     if last_strong_tag is None:
                         last_strong_tag = strong_tags[-1]
                     if last_strong_tag.text.strip() != "":
-                        column_name2 = " - ".join([column_name, last_strong_tag.text.rstrip(":")])
+                        column_name2 = " - ".join([column_name, stripped_tag_text(last_strong_tag)])
                         txt = next_tag.text
                         txt = txt.split(last_strong_tag.text, 1)[1]
                         # Find the tag starting the next subsection, which will start with a `h2` tag.
