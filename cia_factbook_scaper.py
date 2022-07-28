@@ -4,6 +4,7 @@ import logging
 import os
 import pandas as pd
 import pickle
+import time
 
 import bs4
 from selenium import webdriver
@@ -44,6 +45,7 @@ def scrape_pages(countries):
         try:
             url = country["url"]
             driver.get(url)
+            time.sleep(3)
             country["page_source"] = driver.page_source
         except Exception as e:
             logging.warning("Could not scrape the source from {}.\n{}".format(url, e))
