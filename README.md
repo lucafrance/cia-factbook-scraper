@@ -7,7 +7,7 @@ The exported data is in the public domain.
 *[About The World Factbook - Copyright and Contributors](https://www.cia.gov/the-world-factbook/about/copyright-and-contributors/)*
 
 The file `country_data_codes.csv` is used as the list of countries to scrape.
-It is in the publc domain, as it also provided by the CIA ([source](https://www.cia.gov/the-world-factbook/references/country-data-codes/)).
+It is in the public domain, as it also provided by the CIA ([source](https://www.cia.gov/the-world-factbook/references/country-data-codes/)).
 
 ## Requirements
 - [Python](https://www.python.org/)
