@@ -9,6 +9,8 @@ The exported data is in the public domain.
 The file `country_data_codes.csv` is used as the list of countries to scrape.
 It is in the public domain, as it also provided by the CIA ([source](https://www.cia.gov/the-world-factbook/references/country-data-codes/)).
 
+The resulting dataset is [available on kaggle](https://www.kaggle.com/datasets/lucafrance/the-world-factbook-by-cia).
+
 ## Requirements
 - [Python](https://www.python.org/)
 - [Selenium](https://www.selenium.dev/)
