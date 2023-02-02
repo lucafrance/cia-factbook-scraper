@@ -54,7 +54,7 @@ def scrape_pages(countries):
 
 
 def stripped_tag_text(tag):
-    """Given a bs4 tag, return the text stripper of irrelevant characters."""
+    """Given a bs4 tag, return the text stripped of irrelevant characters."""
     return tag.text.strip(":- \u00a0\u2014")
 
 
