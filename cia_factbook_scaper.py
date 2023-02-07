@@ -85,24 +85,24 @@ def parse_h3_tag(h3_tag, section_name, country):
     country      -- the parent country dictionary to store the parsed information
     """
     column_name = ": ".join([section_name, stripped_tag_text(h3_tag)])
-    next_tag = h3_tag.next_sibling
+    content_tag = h3_tag.next_sibling
 
     # Check that the information is actually there
-    next_tag_found = True
-    if next_tag is None:
-        next_tag_found = False
-    elif next_tag.text.strip() == "":
-        next_tag_found = False
+    content_tag_found = True
+    if content_tag is None:
+        content_tag_found = False
+    elif content_tag.text.strip() == "":
+        content_tag_found = False
         
-    if not next_tag_found:
+    if not content_tag_found:
         logging.warning("Information not found for section \"{}\" in \"{}\".".format(h3_tag.text, country["url"]))
         print("WARNING You might want to check section \"{}\" at \"{}\", I did not find anything.".format(h3_tag.text, country["url"]))
         return
 
-    # If `next_tag` is a bs4 Tag, then it could contain `strong`` tags.
-    # If not, it is ptobably a bs4 NavigableString and the list of `strong` tags is empty.
-    if type(next_tag) is bs4.element.Tag:
-        strong_tags = next_tag.find_all("strong")
+    # If `content_tag` is a bs4 Tag, then it could contain `strong`` tags.
+    # If not, it is probably a bs4 NavigableString and the list of `strong` tags is empty.
+    if type(content_tag) is bs4.element.Tag:
+        strong_tags = content_tag.find_all("strong")
     else:
         strong_tags = []
     
@@ -111,8 +111,8 @@ def parse_h3_tag(h3_tag, section_name, country):
     if len(strong_tags) > 0:
         # There might be information before the first `strong` tag.
         # If so, it gets its own column.
-        if not next_tag.text.startswith(strong_tags[0].text):
-            country[column_name] = next_tag.text.split(strong_tags[0].text, 1)[0]
+        if not content_tag.text.startswith(strong_tags[0].text):
+            country[column_name] = content_tag.text.split(strong_tags[0].text, 1)[0]
         
         # Each `strong` tag gets its own column
         last_strong_tag = None
@@ -121,7 +121,7 @@ def parse_h3_tag(h3_tag, section_name, country):
             if strong_tags[i].text == "":
                 continue
             column_name2 = " - ".join([column_name, stripped_tag_text(strong_tags[i])])
-            txt = next_tag.text
+            txt = content_tag.text
             txt = txt.split(strong_tags[i].text, 1)[1]
             # This is to handle a stupid case of `<strong><br></strong>` in the source.
             # If no proper `strong` tag is left, then that is the last tag of the section
@@ -143,7 +143,7 @@ def parse_h3_tag(h3_tag, section_name, country):
             last_strong_tag = strong_tags[-1]
         if last_strong_tag.text.strip() != "":
             column_name2 = " - ".join([column_name, stripped_tag_text(last_strong_tag)])
-            txt = next_tag.text
+            txt = content_tag.text
             txt = txt.split(last_strong_tag.text, 1)[1]
             # Find the tag starting the next subsection, which will start with a `h2` tag.
             # If none is found, just keep whatever is left.
@@ -157,12 +157,12 @@ def parse_h3_tag(h3_tag, section_name, country):
             country[column_name2] = txt.strip()
         
     # If there are no `strong` tags, then the whole section's text is taken
-    elif next_tag.text != "":
-        country[column_name] = next_tag.text
-    elif next_tag.next_sibling is None:
+    elif content_tag.text != "":
+        country[column_name] = content_tag.text
+    elif content_tag.next_sibling is None:
         logging.warning("I could not find a paragraph for section \"{}\" on \"{}\".".format(section_name, country["url"]))
     else:
-        country[column_name] = next_tag.next_sibling.text
+        country[column_name] = content_tag.next_sibling.text
 
 
 def stripped_tag_text(tag):

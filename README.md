@@ -16,7 +16,6 @@ The resulting dataset is [available on kaggle](https://www.kaggle.com/datasets/l
     - Now: `column name = "Coastline"`, `value = "7,600 km"`
     - After: `column name = "Coastline (km)"`, `value = 7600`
 - Refractor code that handles `strong` tags.
-- Rename `next_tag` variable to something more meaningful.
 - Scrape additional content:
     - when the page was last updated,
     - photos,
