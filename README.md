@@ -11,11 +11,6 @@ It is in the public domain, as it also provided by the CIA ([source](https://www
 
 The resulting dataset is [available on kaggle](https://www.kaggle.com/datasets/lucafrance/the-world-factbook-by-cia).
 
-## Requirements
-- [Python](https://www.python.org/)
-- [Selenium](https://www.selenium.dev/)
-- [Beautiful Soup 4](https://www.crummy.com/software/BeautifulSoup/)
-
 ## Possible improvements
 - Remove text from numerical values and add text to column name.
     - Now: `column name = "Coastline"`, `value = "7,600 km"`
