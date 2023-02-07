@@ -223,5 +223,5 @@ if __name__ == "__main__":
     countries = parse_countries(countries)
     export_countries_urls(countries)
     export_list_of_columns(countries)
-    json.dump(countries, open("countries.json", "wt"), indent=0)
+    json.dump(countries, open("countries.json", "wt"), indent=4)
     pd.DataFrame.from_dict(countries, orient="index").to_csv("countries.csv", index_label="Country")
