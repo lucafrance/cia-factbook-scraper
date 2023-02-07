@@ -104,6 +104,7 @@ def parse_content_tag(content_tag, column_name, country):
     """Parse information from `<p>` and `<strong>` tags
 
     Keyword arguments:
+    content_tag -- a bs4 tag between header tags (`<h2>`, `<h3>`)
     column_name -- name of the column for the information in the content_tag,
                    based on the the parent `<h2>` and `<h3>` tags
     country     -- the parent country dictionary to store the parsed information
@@ -119,53 +120,7 @@ def parse_content_tag(content_tag, column_name, country):
     # If there are `strong` tags, each of them gets a separate column.
     # This case probably deserves its own function.
     if len(strong_tags) > 0:
-        # There might be information before the first `strong` tag.
-        # If so, it gets its own column.
-        if not content_tag.text.startswith(strong_tags[0].text):
-            country[column_name] = content_tag.text.split(strong_tags[0].text, 1)[0]
-        
-        # Each `strong` tag gets its own column
-        last_strong_tag = None
-        for i in range(len(strong_tags) - 1):
-            
-            if strong_tags[i].text == "":
-                continue
-            column_name2 = " - ".join([column_name, stripped_tag_text(strong_tags[i])])
-            txt = content_tag.text
-            txt = txt.split(strong_tags[i].text, 1)[1]
-            # This is to handle a stupid case of `<strong><br></strong>` in the source.
-            # If no proper `strong` tag is left, then that is the last tag of the section
-            # and is handeled separetely.
-            # I feel like there is a smarter way to do this.
-            next_non_empty_strong_tag = None
-            for j in range(i+1, len(strong_tags)):
-                if stripped_tag_text(strong_tags[j]) != "":
-                    next_non_empty_strong_tag = strong_tags[j]
-                    break
-            if next_non_empty_strong_tag is None:
-                last_strong_tag = strong_tags[i]
-                break
-            else:
-                txt = txt.split(strong_tags[j].text, 1)[0]
-            country[column_name2] = txt.strip()
-        
-        if last_strong_tag is None:
-            last_strong_tag = strong_tags[-1]
-        if last_strong_tag.text.strip() != "":
-            column_name2 = " - ".join([column_name, stripped_tag_text(last_strong_tag)])
-            txt = content_tag.text
-            txt = txt.split(last_strong_tag.text, 1)[1]
-            # Find the tag starting the next subsection, which will start with a `h2` tag.
-            # If none is found, just keep whatever is left.
-            next_subsection_tag = None
-            for tag in last_strong_tag.next_siblings:
-                if repr(tag).startswith("<h2"):
-                    next_subsection_tag = tag
-                    break
-            if next_subsection_tag is not None:
-                txt.split(next_subsection_tag.text)[0]
-            country[column_name2] = txt.strip()
-        
+        parse_strong_tags(strong_tags, content_tag, column_name, country)
     # If there are no `strong` tags, then the whole section's text is taken
     elif content_tag.text != "":
         country[column_name] = content_tag.text
@@ -173,6 +128,65 @@ def parse_content_tag(content_tag, column_name, country):
         logging.warning("I could not find a paragraph for section \"{}\" on \"{}\".".format(section_name, country["url"]))
     else:
         country[column_name] = content_tag.next_sibling.text
+
+def parse_strong_tags(strong_tags, content_tag, column_name, country):
+    """Parse information from `<strong>` tags
+
+    E.g. "total", "land", "water" in *Geography* > *Area*
+
+    Keyword arguments:
+    strong_tags -- list of bs4 `<strong>` tags from a section
+    content_tag -- parent bs4 tag
+    column_name -- name of the column for the information in the content_tag,
+                   based on the the parent `<h2>` and `<h3>` tags
+    country     -- the parent country dictionary to store the parsed information
+    """
+    # There might be information before the first `strong` tag.
+    # If so, it gets its own column.
+    if not content_tag.text.startswith(strong_tags[0].text):
+        country[column_name] = content_tag.text.split(strong_tags[0].text, 1)[0]
+
+    # Each `strong` tag gets its own column
+    last_strong_tag = None
+    for i in range(len(strong_tags) - 1):
+
+        if strong_tags[i].text == "":
+            continue
+        column_name2 = " - ".join([column_name, stripped_tag_text(strong_tags[i])])
+        txt = content_tag.text
+        txt = txt.split(strong_tags[i].text, 1)[1]
+        # This is to handle a stupid case of `<strong><br></strong>` in the source.
+        # If no proper `strong` tag is left, then that is the last tag of the section
+        # and is handeled separetely.
+        # I feel like there is a smarter way to do this.
+        next_non_empty_strong_tag = None
+        for j in range(i+1, len(strong_tags)):
+            if stripped_tag_text(strong_tags[j]) != "":
+                next_non_empty_strong_tag = strong_tags[j]
+                break
+        if next_non_empty_strong_tag is None:
+            last_strong_tag = strong_tags[i]
+            break
+        else:
+            txt = txt.split(strong_tags[j].text, 1)[0]
+        country[column_name2] = txt.strip()
+
+    if last_strong_tag is None:
+        last_strong_tag = strong_tags[-1]
+    if last_strong_tag.text.strip() != "":
+        column_name2 = " - ".join([column_name, stripped_tag_text(last_strong_tag)])
+        txt = content_tag.text
+        txt = txt.split(last_strong_tag.text, 1)[1]
+        # Find the tag starting the next subsection, which will start with a `h2` tag.
+        # If none is found, just keep whatever is left.
+        next_subsection_tag = None
+        for tag in last_strong_tag.next_siblings:
+            if repr(tag).startswith("<h2"):
+                next_subsection_tag = tag
+                break
+        if next_subsection_tag is not None:
+            txt.split(next_subsection_tag.text)[0]
+        country[column_name2] = txt.strip()
 
 def stripped_tag_text(tag):
     """Given a bs4 tag, return the text stripped of irrelevant characters."""
