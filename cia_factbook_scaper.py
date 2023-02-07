@@ -98,6 +98,16 @@ def parse_h3_tag(h3_tag, section_name, country):
         logging.warning("Information not found for section \"{}\" in \"{}\".".format(h3_tag.text, country["url"]))
         print("WARNING You might want to check section \"{}\" at \"{}\", I did not find anything.".format(h3_tag.text, country["url"]))
         return
+    parse_content_tag(content_tag, column_name , country)
+
+def parse_content_tag(content_tag, column_name, country):
+    """Parse information from `<p>` and `<strong>` tags
+
+    Keyword arguments:
+    column_name -- name of the column for the information in the content_tag,
+                   based on the the parent `<h2>` and `<h3>` tags
+    country     -- the parent country dictionary to store the parsed information
+    """
 
     # If `content_tag` is a bs4 Tag, then it could contain `strong`` tags.
     # If not, it is probably a bs4 NavigableString and the list of `strong` tags is empty.
@@ -163,7 +173,6 @@ def parse_h3_tag(h3_tag, section_name, country):
         logging.warning("I could not find a paragraph for section \"{}\" on \"{}\".".format(section_name, country["url"]))
     else:
         country[column_name] = content_tag.next_sibling.text
-
 
 def stripped_tag_text(tag):
     """Given a bs4 tag, return the text stripped of irrelevant characters."""
