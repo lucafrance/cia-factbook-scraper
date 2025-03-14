@@ -60,7 +60,10 @@ def scrape_pages(countries):
 def parse_countries(countries):
     """Parse the page source for each country."""
     for country in countries.values():
-        parse_country(country)
+        try:
+            parse_country(country)
+        except Exception as e:
+            logging.warning(f"Parsing failed for {country["url"]}")
     return countries
 
 def parse_country(country):
