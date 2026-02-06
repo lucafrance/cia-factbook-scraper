@@ -1,4 +1,9 @@
 # CIA - The World Factbook Scraper
+
+**Note** The World Factbook has been discontinued without warning nor reasoning on February 4th, 2026 ([announcement](https://www.cia.gov/stories/story/spotlighting-the-world-factbook-as-we-bid-a-fond-farewell/), [associated press story](https://apnews.com/article/cia-world-factbook-ratcliffe-trump-fbec61ce16c4b3db59db9cefce0da043)). This dataset includes the data as of March 14th, 2025.
+
+---
+
 This is a scraper for [*The World Factbook*](https://www.cia.gov/the-world-factbook/).
 The data is exported to a `json` and to a `csv`.
 
